@@ -77,3 +77,17 @@ export async function createProduct(req: Request, res: Response) {
     sendSomethingWentWrongError(res, err);
   }
 }
+
+export async function getProductCount(req: Request, res: Response) {
+  try {
+    const patch: Product.CountParams = req.query;
+
+    const productsCount = await Product.getProductsCount(patch);
+
+    res.json(productsCount);
+  } catch (err) {
+    console.error(err.message);
+
+    sendSomethingWentWrongError(res, err);
+  }
+}

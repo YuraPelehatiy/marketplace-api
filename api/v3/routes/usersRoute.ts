@@ -74,3 +74,17 @@ export async function updateById(req: Request, res: Response) {
     });
   }
 }
+
+export async function getUserCount(req: Request, res: Response) {
+  try {
+    const patch: User.CountParams = req.query;
+
+    const userCount = await User.getUserCount(patch);
+
+    res.json(userCount);
+  } catch (err) {
+    console.error(err.message);
+
+    sendSomethingWentWrongError(res, err);
+  }
+}

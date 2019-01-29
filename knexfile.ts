@@ -14,9 +14,9 @@ const config: KnexConfig = {
   development: {
     client: 'postgresql',
     connection: {
-      database: 'apiko-marketplace',
-      user: 'postgres',
-      password: 'password',
+      database: 'dae50k5ac6giat',
+      user: 'scocollspjidwo',
+      password: 'a6e766f2d5a88f5cec601c915ea17b205967082d6ae36a80d821a4623ffee5d3',
     },
     pool: {
       min: 2,
@@ -33,9 +33,9 @@ const config: KnexConfig = {
   staging: {
     client: 'postgresql',
     connection: {
-      database: 'apiko-marketplace',
-      user: 'postgres',
-      password: 'password',
+      database: 'dae50k5ac6giat',
+      user: 'scocollspjidwo',
+      password: 'a6e766f2d5a88f5cec601c915ea17b205967082d6ae36a80d821a4623ffee5d3',
     },
     pool: {
       min: 2,

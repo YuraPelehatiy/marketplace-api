@@ -34,6 +34,11 @@ export type FindUserParams = {
 export type PaginationParams = {
   limit: number,
   offset: number,
+  search: string,
+};
+
+export type CountParams = {
+  search: string,
 };
 
 export function findUser(params: FindUserParams): Promise<User[]> {
@@ -51,10 +56,12 @@ export function findUserById(id: string): Promise<User[]> {
 export function findAll({
   limit,
   offset,
+  search,
 }: PaginationParams): Promise<User[]> {
   return client('users')
     .limit(limit || 10)
     .offset(offset || 0)
+    .whereRaw(`LOWER(title) LIKE ?`, [`%${search ? search.toLowerCase(): ''}%`])
     .select();
 }
 
@@ -78,4 +85,13 @@ export function updateById(
     .where({ id })
     .update(patch)
     .returning('*');
+}
+
+export function getUserCount({
+  search,
+}: CountParams): Promise<User[]> {
+  return client('products')
+    // .where('title', 'like', `%${search || ''}%`)
+    .whereRaw(`LOWER(title) LIKE ?`, [`%${search ? search.toLowerCase(): ''}%`])
+    .count('id')
 }

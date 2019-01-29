@@ -17,18 +17,30 @@ export type ProductPatch = {
   price?: number,
 };
 
+export type ProductCountPatch = {
+  count?: number,
+};
+
 export type PaginationParams = {
   limit: number,
   offset: number,
+  search: string,
+};
+
+export type CountParams = {
+  search: string,
 };
 
 export function getProducts({
   limit,
   offset,
+  search,
 }: PaginationParams): Promise<Product[]> {
   return client('products')
     .limit(limit || 10)
     .offset(offset || 0)
+    // .where('title', 'like', `%${search || ''}%`)
+    .whereRaw(`LOWER(title) LIKE ?`, [`%${search ? search.toLowerCase(): ''}%`])
     .select('*');
 }
 
@@ -67,4 +79,13 @@ export function createProduct(
   return client('products')
     .insert(product)
     .returning('*');
+}
+
+export function getProductsCount({
+  search,
+}: CountParams): Promise<Product[]> {
+  return client('products')
+    // .where('title', 'like', `%${search || ''}%`)
+    .whereRaw(`LOWER(title) LIKE ?`, [`%${search ? search.toLowerCase(): ''}%`])
+    .count('id')
 }
