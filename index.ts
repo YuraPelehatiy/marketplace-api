@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import routerV1 from './api/v1/router';
 import routerV2 from './api/v2/router';
 import routerV3 from './api/v3/router';
+import routerV4 from './api/v4/router';
 
 type Port = string | number;
 
@@ -17,6 +18,8 @@ app.use(bodyParser.json());
 app.use('/api/v1', routerV1);
 app.use('/api/v2', routerV2);
 app.use('/api/v3', routerV3);
+app.use('/api/v4', routerV4);
+
 
 app.use((err: Error, req: Request, res: Response, next: Function) => {
   if (err.name === 'UnauthorizedError') {

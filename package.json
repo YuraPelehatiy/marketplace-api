@@ -4,8 +4,9 @@
   "description": "",
   "main": "build/index.js",
   "scripts": {
-    "start": "node ./build/index.js",
+    "start": "tsc -b && node ./build/index.js",
     "dev": "NODE_ENV=development node ./build/index.js",
+    "node": "./node_modules/nodemon/bin/nodemon.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "tsc -b",
     "seed": "knex seed:run --knexfile ./build/knexfile.js",
@@ -34,10 +35,11 @@
     "knex": "^0.15.2",
     "lodash": "^4.17.11",
     "pg": "^7.4.3",
-    "ts-node": "^7.0.0",
     "typescript": "^3.0.1"
   },
   "devDependencies": {
+    "nodemon": "^1.18.9",
+    "ts-node": "^7.0.1",
     "tslint": "^5.11.0",
     "tslint-config-airbnb": "^5.11.0"
   },
