@@ -26,7 +26,6 @@ export async function getProductsByCategory(req: Request, res: Response) {
     let products: Product.Product[] = [];
 
     const params: Product.PaginationParams = req.query;
-    
     const { category } = req.params;
 
     products = await Product.getProductsByCategory(params, category);
@@ -100,7 +99,7 @@ export async function getProductCount(req: Request, res: Response) {
   try {
     const patch: Product.CountParams = req.query;
 
-    const productsCount = await Product.getProductsCount(patch);
+    const [productsCount] = await Product.getProductsCount(patch);
 
     res.json(productsCount);
   } catch (err) {

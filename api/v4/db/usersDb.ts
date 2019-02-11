@@ -9,6 +9,7 @@ export type User = {
   email: string,
   password: string,
   role: Role,
+  wishes?: [],
   created_at?: string,
   updated_at?: string,
 };
@@ -34,11 +35,16 @@ export type FindUserParams = {
 export type PaginationParams = {
   limit: number,
   offset: number,
-  search: string,
+  search?: string,
 };
 
 export type CountParams = {
-  search: string,
+  search?: string,
+};
+
+export type WishesParams = {
+  userId: string,
+  productId: string,
 };
 
 export function findUser(params: FindUserParams): Promise<User[]> {
@@ -91,7 +97,59 @@ export function getUserCount({
   search,
 }: CountParams): Promise<User[]> {
   return client('products')
-    // .where('title', 'like', `%${search || ''}%`)
     .whereRaw(`LOWER(title) LIKE ?`, [`%${search ? search.toLowerCase(): ''}%`])
     .count('id')
+}
+
+export function addWish(
+  userId: string,
+  productId: string,
+): Promise<User[]> {
+  return client('users')
+    .where('id', userId)
+    .select()
+    .then(userRow => {
+      let user = userRow;
+      if(user[0].wishes === null){
+        user[0].wishes = [productId]
+      } else {
+        user[0].wishes.push(productId)
+      }
+      return client('users')
+        .where('id', userId)
+        .select()
+        .update('wishes', user[0].wishes);
+    })
+}
+
+export function removeWish(
+  userId: string,
+  productId: string,
+): Promise<User[]> {
+  return client('users')
+    .where('id', userId)
+    .select()
+    .then(userRow => {
+      let user = userRow;
+      if(user[0].wishes === null){
+        return user;
+      } else {
+        const indexOfProductId = user[0].wishes.indexOf(productId)
+        if (indexOfProductId === -1) {
+          return user;
+        } else {
+          user[0].wishes.splice(indexOfProductId, 1);
+        }
+      }
+      return client('users')
+        .where('id', userId)
+        .select()
+        .update('wishes', user[0].wishes);
+    })
+}
+
+export function getWishes(id: string): Promise<User[]> {
+  return client('users')
+    .where({ id })
+    .select();
 }

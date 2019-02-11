@@ -6,6 +6,7 @@ import * as passwordsDb from '../db/passwordsDb';
 import { JWT_SECRET } from '../../../constants';
 import * as _ from 'lodash';
 import { sendSomethingWentWrongError } from '../errors';
+import { sendEmailRememberPassword } from '../emails';
 
 export type LoginParams = {
   email: string,
@@ -50,6 +51,10 @@ export async function register(req: Request, res: Response) {
   try {
     const params: usersDb.CreateUserParams = req.body;
 
+    if (!params.password) {
+      throw new Error('Must be password');
+    }
+
     const users = await usersDb.findUser(
       { email: params.email } as usersDb.FindUserParams,
     );
@@ -86,7 +91,11 @@ export async function rememberPassword(req: Request, res: Response) {
       params,
     );
 
-    // TODO: Send email with reset password details
+    if(users) {
+      // TODO: Send email with working reset password details
+      sendEmailRememberPassword(users.email);
+    }
+
     res.json({ success: true });
   } catch (err) {
     console.error(err.message);

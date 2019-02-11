@@ -43,7 +43,7 @@ const onlyForAdmins = [identifyUser, isAdmin];
 // Products
 router.get('/products', identifyUser, productRoute.getProducts);
 router.get(
-  '/products/category/:category',
+  '/category/:category/products',
   identifyUser,
   productRoute.getProductsByCategory
 );
@@ -79,5 +79,10 @@ router.post('/auth/remember', authRoute.rememberPassword);
 // Count users and products
 router.get('/products-count', identifyUser, productRoute.getProductCount);
 router.get('/user-count', identifyUser, usersRoute.getUserCount);
+
+// Wishes
+router.get('/wish', requireAuth, usersRoute.getWishes);
+router.patch('/wish/:id', requireAuth, usersRoute.addWish);
+router.delete('/wish/:id', requireAuth, usersRoute.removeWish);
 
 export default router;

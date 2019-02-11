@@ -79,7 +79,7 @@ export async function getUserCount(req: Request, res: Response) {
   try {
     const patch: User.CountParams = req.query;
 
-    const userCount = await User.getUserCount(patch);
+    const [userCount] = await User.getUserCount(patch);
 
     res.json(userCount);
   } catch (err) {
@@ -88,3 +88,48 @@ export async function getUserCount(req: Request, res: Response) {
     sendSomethingWentWrongError(res, err);
   }
 }
+
+export async function addWish(req: Request, res: Response) {
+  try {
+    const { id } = req.user;
+    const { id: productId } = req.params;
+
+    await User.addWish(id, productId);
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err.message);
+
+    sendSomethingWentWrongError(res, err);
+  }
+}
+
+export async function removeWish(req: Request, res: Response) {
+  try {
+    const { id } = req.user;
+    const { id: productId } = req.params;
+
+    await User.removeWish(id, productId);
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err.message);
+
+    sendSomethingWentWrongError(res, err);
+  }
+}
+
+export async function getWishes(req: Request, res: Response) {
+  try {
+    const { id } = req.user;
+
+    const [wishes] = await User.getWishes(id);
+
+    res.json(wishes.wishes);
+  } catch (err) {
+    console.error(err.message);
+
+    sendSomethingWentWrongError(res, err);
+  }
+}
+

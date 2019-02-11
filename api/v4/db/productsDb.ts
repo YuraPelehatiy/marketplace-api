@@ -25,11 +25,13 @@ export type ProductCountPatch = {
 export type PaginationParams = {
   limit: number,
   offset: number,
-  search: string,
+  search?: string,
+  sort?: string,
+  order?: string,
 };
 
 export type CountParams = {
-  search: string,
+  search?: string,
 };
 
 
@@ -37,12 +39,14 @@ export function getProducts({
   limit,
   offset,
   search,
+  sort,
+  order,
 }: PaginationParams): Promise<Product[]> {
   return client('products')
     .limit(limit || 10)
     .offset(offset || 0)
-    // .where('title', 'like', `%${search || ''}%`)
     .whereRaw(`LOWER(title) LIKE ?`, [`%${search ? search.toLowerCase(): ''}%`])
+    .orderBy(sort || 'created_at', order)
     .select('*');
 }
 
